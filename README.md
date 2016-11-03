@@ -25,8 +25,8 @@ sudo apt-get install qtbase5-dev
 roscd && cd ../src
 git clone https://github.com/Olin-FunRobo/funrobo_wallfollower.git 
 cd ..
-catkin_make [--pkg funrobo_wallfollower]
 rosdep install funrobo_wallfollower
+catkin_make [--pkg funrobo_wallfollower]
 ```
 The content within the bracket is optional.
 
