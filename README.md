@@ -52,13 +52,15 @@ Then, you can work off of the fork and submit your results via pull request!
 
 ```bash
 roscd && cd ../src
-git clone https://github.com/Olin-FunRobo/funrobo_wallfollower.git 
+git clone <your_repository>/funrobo_wallfollower.git 
 cd ..
 rosdep install funrobo_wallfollower
 catkin_make [--pkg funrobo_wallfollower]
 ```
 
-The content within the bracket is optional.
+Note that in the above step, we're cloning from your copy of the repository, since you created a fork.
+
+The content within the bracket is optional. When use the --pkg flag when you want to build only one package.
 
 ### Running the simulator
 
