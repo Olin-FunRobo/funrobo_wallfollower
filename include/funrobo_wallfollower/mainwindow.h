@@ -44,6 +44,11 @@ public:
     void right_ctrl(const std_msgs::Float32ConstPtr& msg);
     void publish_sensors(const std::vector<float>& val);
 
+public slots:
+    void resetRobot();
+    void setSimAccel(double accel);
+    void resetPower();
+
 private:
     Ui::MainWindow *ui;
 protected:

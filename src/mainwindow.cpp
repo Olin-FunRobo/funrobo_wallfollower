@@ -26,12 +26,15 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
+
     if(++lcnt > 5){ // wait for 5dt and shut off
         robot.setVelocityL(0.0);
     }
+
     if(++rcnt > 5){ // wait for 5dt and shut off
         robot.setVelocityR(0.0);
     }
+
     sense(); // sense ir sensors
     robot.update(); // update robot position, apply velocity, etc.
 }
@@ -73,4 +76,19 @@ void MainWindow::right_ctrl(const std_msgs::Float32ConstPtr &msg){
     ui->r_pow_slider->setValue(msg->data);
     rcnt = 0;
 
+}
+void MainWindow::resetRobot(){
+    robot.reset(QPointF(PXL_DIMS/2,PXL_DIMS/2),0);
+}
+
+void MainWindow::resetPower(){
+    ui->l_pow_slider->setValue(0);
+    ui->r_pow_slider->setValue(0);
+    robot.setVelocity(0,0);
+}
+
+void MainWindow::setSimAccel(double accel){
+    killTimer(timerId);
+    SIMULATION_ACCELARATION = accel;
+    timerId = startTimer(DT * 1000 / SIMULATION_ACCELARATION);
 }

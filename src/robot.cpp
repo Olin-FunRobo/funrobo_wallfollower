@@ -16,6 +16,7 @@ Robot::Robot(QGraphicsScene& scene, QPointF pos, float theta):
     theta(theta)
 {
     vel_l = vel_r = 0.;
+    emergency = false;
 
     body = new RobotItem(pos,QPointF(ROBOT_LENGTH,ROBOT_WIDTH), 0.0);
     scene.addItem(body);
@@ -31,6 +32,7 @@ Robot::~Robot(){
 void Robot::reset(QPointF p, float t){
     pos=p; theta=t;
     body->setPos(pos,theta);
+    emergency = false;
 }
 
 void Robot::reset(QPolygonF route){
@@ -39,16 +41,23 @@ void Robot::reset(QPolygonF route){
     float dst_y = route[1].y();
 
     theta = atan2(pos.y() - dst_y,dst_x - pos.x());
+    body->setPos(pos,theta);
+    emergency = false;
 
 }
 
 void Robot::move(float delta, float dtheta){
+
     theta += dtheta * DT;
     pos += delta * QPointF(cos(theta), -sin(theta)) * DT;
     update();
 }
 
 void Robot::update(){
+    if(emergency){
+        std::cerr << "Robot is in Emergency State; please reset." << std::endl;
+        return;
+    }
     // update position
     float w = (vel_r - vel_l) / WHEEL_DISTANCE;
     if(w != 0){
@@ -117,12 +126,31 @@ std::vector<float> Robot::sense(const Wall& wall){
     QPointF res;
     std::vector<float> val{IR_RANGE, IR_RANGE, IR_RANGE};
 
+    QPointF dx = ROBOT_LENGTH/2 * QPointF(cos(theta), -sin(theta));
+    QPointF dy = ROBOT_WIDTH/2 * QPointF(sin(theta), cos(theta));
+
+    QLineF hull_l(pos-dy-dx,pos-dy+dx),
+            hull_r(pos+dy-dx, pos+dy+dx),
+            hull_f(pos+dx+dy, pos+dx-dy),
+            hull_b(pos-dx-dy, pos-dx+dy);
+
     for(int i=0; i < 3; ++i){
         for(int j=0; j < n; ++j){
 
             // wall segment
             QPointF s_0 = wall.poly[j];
             QPointF s_1 = wall.poly[(j+1) % n]; // cyclic
+
+            QLineF seg(s_0, s_1);
+            if(seg.intersect(hull_l, nullptr) == QLineF::BoundedIntersection ||
+                seg.intersect(hull_r, nullptr) == QLineF::BoundedIntersection ||
+                    seg.intersect(hull_f, nullptr) == QLineF::BoundedIntersection ||
+                    seg.intersect(hull_b, nullptr) == QLineF::BoundedIntersection
+                    ){
+                // robot collision with wall
+                emergency = true;
+                return val;
+            }
 
             if (intersect(ir[i].src, ir[i].dst, s_0, s_1, res)){
                 val[i] = min(val[i], norm(res - ir[i].src));

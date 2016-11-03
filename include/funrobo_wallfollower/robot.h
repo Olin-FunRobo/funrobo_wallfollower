@@ -27,9 +27,11 @@ class Robot
 
 public:
     QPointF pos; // current position
-    float theta; // heading, measured from horz.  radians
 
+    float theta; // heading, measured from horz.  radians
     float vel_l, vel_r;
+
+    bool emergency;
 
     IR ir[3];
 

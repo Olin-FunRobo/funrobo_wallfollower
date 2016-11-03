@@ -336,6 +336,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>resetRobotBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>resetRobot()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>609</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>730</x>
+     <y>47</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setLeftPower(int)</slot>
@@ -344,5 +360,6 @@
   <slot>setIRHeight(int)</slot>
   <slot>setAuto(bool)</slot>
   <slot>setSimAccel(double)</slot>
+  <slot>resetRobot()</slot>
  </slots>
 </ui>

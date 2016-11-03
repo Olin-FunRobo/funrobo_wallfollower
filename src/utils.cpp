@@ -15,7 +15,7 @@ float SIMULATION_ACCELARATION = 1.;
 const float ROBOT_LENGTH = c2p(60);
 const float ROBOT_WIDTH = c2p(40);
 
-const float WHEEL_DISTANCE = c2p(13.0);
+const float WHEEL_DISTANCE = c2p(40);
 
 const float IR_RANGE = c2p(80); // 0 ~ 80 cm
 
