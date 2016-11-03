@@ -31,7 +31,6 @@ void RobotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
     painter->setPen(QPen(d_irf < IR_RANGE? trust : doubt, 4, Qt::DashLine));
     painter->drawLine(ir_f, ir_f + d_irf * QPointF(1.0, 0.0));
 
-
     painter->setPen(QPen(d_irl < IR_RANGE? trust : doubt, 4, Qt::DashLine));
     painter->drawLine(ir_l, ir_l - d_irl * QPointF(0.0, 1.0)); // TODO : IR_RANGE --> contact point
 

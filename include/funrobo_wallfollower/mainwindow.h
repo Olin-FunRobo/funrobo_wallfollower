@@ -37,6 +37,9 @@ public:
     void sense();
     ~MainWindow();
 
+    void subscribe(ros::NodeHandle& n);
+    void advertise(ros::NodeHandle& n);
+
     void left_ctrl(const std_msgs::Float32ConstPtr& msg);
     void right_ctrl(const std_msgs::Float32ConstPtr& msg);
     void publish_sensors(const std::vector<float>& val);

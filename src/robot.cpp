@@ -81,13 +81,11 @@ void Robot::update(){
         pos += vel_l * QPointF(cos(theta), -sin(theta)) * DT;
     }
 
-    std::cout << pos << std::endl;
-
     body->setPos(pos, theta);
     body->update();
 
-    QPointF nx = QPointF(cos(theta), -sin(theta)); // normal components in local coordinates
-    QPointF ny = QPointF(-sin(theta), cos(theta));
+    QPointF nx = QPointF(cos(theta), -sin(theta)); // normalized components in local coordinates
+    QPointF ny = QPointF(sin(theta), cos(theta));
 
     ir[FRONT].src = pos + ROBOT_LENGTH/2 * nx;
     ir[FRONT].dst = ir[FRONT].src + IR_RANGE * nx;

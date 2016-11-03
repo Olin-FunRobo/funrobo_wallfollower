@@ -3,6 +3,7 @@
 #include <iostream>
 #include <QTimer>
 
+int lcnt=0, rcnt=0;
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -25,18 +26,29 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::timerEvent(QTimerEvent *){
-    sense();
-
-
-    // publish sensor data to ros
-    // look at ros input msg and control robot
-    robot.update();
-    robot.setVelocity(0.0,0.0);
+    if(++lcnt > 5){ // wait for 5dt and shut off
+        robot.setVelocityL(0.0);
+    }
+    if(++rcnt > 5){ // wait for 5dt and shut off
+        robot.setVelocityR(0.0);
+    }
+    sense(); // sense ir sensors
+    robot.update(); // update robot position, apply velocity, etc.
 }
 
 void MainWindow::sense(){
     publish_sensors(robot.sense(wall));
-    // this is the important code
+}
+
+void MainWindow::subscribe(ros::NodeHandle &n){
+    vel_l = n.subscribe<std_msgs::Float32>("/vel_l", 1000, &MainWindow::left_ctrl, this);
+    vel_r = n.subscribe<std_msgs::Float32>("/vel_r", 1000, &MainWindow::right_ctrl, this);
+}
+
+void MainWindow::advertise(ros::NodeHandle &n){
+    ir_f = n.advertise<std_msgs::Float32>("/ir_f", 10, false);
+    ir_l = n.advertise<std_msgs::Float32>("/ir_l", 10, false);
+    ir_r = n.advertise<std_msgs::Float32>("/ir_r", 10, false);
 }
 
 void MainWindow::publish_sensors(const std::vector<float>& val){
@@ -51,8 +63,14 @@ void MainWindow::publish_sensors(const std::vector<float>& val){
 
 void MainWindow::left_ctrl(const std_msgs::Float32ConstPtr &msg){
     robot.setVelocityL(msg->data);
+    ui->l_pow_slider->setValue(msg->data);
+    lcnt = 0;
+
 }
 
 void MainWindow::right_ctrl(const std_msgs::Float32ConstPtr &msg){
     robot.setVelocityR(msg->data);
+    ui->r_pow_slider->setValue(msg->data);
+    rcnt = 0;
+
 }
