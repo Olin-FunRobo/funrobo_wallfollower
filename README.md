@@ -39,23 +39,27 @@ rosrun funrobo_wallfollower simulator
 ### System Description
 
 #### Inputs
-[std_msgs/Float32] ir_f : front IR with 80cm range
-[std_msgs/Float32] ir_l : left IR with 80cm range
-[std_msgs/Float32] ir_r : right IR with 80cm range
+
+- [std_msgs/Float32] ir_f : front IR with 80cm range
+- [std_msgs/Float32] ir_l : left IR with 80cm range
+- [std_msgs/Float32] ir_r : right IR with 80cm range
 
 #### Outputs
-[std_msgs/Float32] vel_l : velocity of the left motor
-[std_msgs/Flaot32] vel_r : velocity of the right motor
+
+- [std_msgs/Float32] vel_l : velocity of the left motor
+- [std_msgs/Flaot32] vel_r : velocity of the right motor
 
 #### Learning Objectives :
 
-Basic Inverse-Kinematics for Differential-Drive Robot
-Simple Autonomy Engine for Wall-Following Behavior
-Experience with Software-In-The-Loop Testing Control Code
-Proficiency with C++ and ROS
+- Basic Inverse-Kinematics for Differential-Drive Robot
+- Simple Autonomy Engine for Wall-Following Behavior
+- Experience with Software-In-The-Loop Testing Control Code
+- Proficiency with C++ and ROS
 
 ### Deliverables
 
 After you fork this repository, do your hardware developments and create a pull request.
 
 We'll run your code and see how well it performs with the system!
+
+If you have any problems, or discover a strange bug, feel free to contact me.
