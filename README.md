@@ -67,3 +67,9 @@ The content within the bracket is optional. When use the --pkg flag when you wan
 ```bash
 rosrun funrobo_wallfollower simulator
 ```
+
+### References
+
+- [Wall Following](http://www.mlees-robotronics.in/home/robotics/wall-following-algorithm)
+
+- [Diff Drive Kinematics](https://chess.eecs.berkeley.edu/eecs149/documentation/differentialDrive.pdf)
