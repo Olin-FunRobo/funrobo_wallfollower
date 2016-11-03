@@ -17,7 +17,7 @@ find_package(Qt5Widgets REQUIRED)
 
 #MESSAGE(STATUS "INCLUDES : " ${Qt5Widgets_INCLUDE_DIRS})
 
-set (sim_lib_src src/mainwindow.cpp src/worker.cpp)
+set (sim_lib_src src/mainwindow.cpp src/worker.cpp src/wall.cpp src/robot.cpp src/utils.cpp src/robotitem.cpp)
 set (sim_lib_ui assets/mainwindow.ui)
 set (sim_bin_src src/main.cpp)
 set (sim_lib_hdr include/funrobo_wallfollower/mainwindow.h)

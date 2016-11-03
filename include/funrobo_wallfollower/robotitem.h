@@ -12,19 +12,17 @@
 class RobotItem : public QGraphicsItem{
 private:
     QPointF pos;
+    QPointF ir_f, ir_l, ir_r; // ir positions
+    float d_irf, d_irl, d_irr; // distances
     QPointF dims;
-    QPointF irOffset;
     float theta;
-    //frequently requested derived features
-    float cr;
 public:
-    RobotItem(QPointF pos, QPointF dims, QPointF irOffset, float theta, float cr);
+    RobotItem(QPointF pos, QPointF dims, float theta);
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     void setPos(QPointF pos, float theta);
-    void setCR(float cr);
-    QPointF irPos_r();
-    QPointF irPos_l();
+
+    void setSensors(float d_irf, float d_irl, float d_irr); // sensor limits
 
 };
 

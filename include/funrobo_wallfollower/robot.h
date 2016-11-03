@@ -1,6 +1,8 @@
 #ifndef ROBOT_H
 #define ROBOT_H
 
+#include <vector>
+
 #include <QObject>
 #include <QPointF>
 
@@ -13,7 +15,12 @@
 
 #include "utils.h"
 #include "robotitem.h"
+#include "wall.h"
 
+struct IR{
+    QPointF src, dst;
+    float val;
+};
 
 class Robot
 {
@@ -22,30 +29,14 @@ public:
     QPointF pos; // current position
     float theta; // heading, measured from horz.  radians
 
-    QPointF irOffset;
-
     float vel_l, vel_r;
 
-    float h; // height of IR sensor, inches
-    float fov; //field of view of IR sensor, radians
-
-    float ir_val_l; //value of ir reflectance sensors
-    float ir_val_r;
-
-    // frequently computed values
-    float cr; //cone radius
+    IR ir[3];
 
     RobotItem* body;
 
-    //QGraphicsItemGroup* robot;
-    //QGraphicsRectItem *body; //approximation
-    //QGraphicsEllipseItem *ir_l; //approximation
-    //QGraphicsEllipseItem *ir_r; //approximation
-
 public:
-    Robot(QGraphicsScene& scene,
-          QPointF pos, float theta,
-          QPointF irOffset, float h, float fov);
+    Robot(QGraphicsScene& scene, QPointF pos, float theta);
     ~Robot();
 
     void reset(QPointF pos, float theta);
@@ -56,9 +47,9 @@ public:
     void setVelocity(float left, float right);
     void setVelocityR(float r);
     void setVelocityL(float l);
-    void setIRHeight(float h);
 
-    void sense(QImage& img);
+    std::vector<float> sense(const Wall& wall);
+
     void setVisible(bool visible);
 };
 

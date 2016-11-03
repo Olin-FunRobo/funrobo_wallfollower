@@ -21,8 +21,12 @@ sudo apt-get install qtbase5-dev
 ### Installing the simulator
 
 ```bash
-roscd && cd ../
+
+roscd && cd ../src
+git clone https://github.com/Olin-FunRobo/funrobo_wallfollower.git 
+cd ..
 catkin_make [--pkg funrobo_wallfollower]
+```
 ```
 The content within the bracket is optional.
 

@@ -1,31 +1,27 @@
-#include "robot.h"
+#include "funrobo_wallfollower/robot.h"
 #include <iostream>
-
 
 // 1 pxl = .5 cm
 // 270 x 270 cm world
 
 // robot = 20x16 cm
 
-
-
 float coneRadius(float h, float fov){
     return h*tan(fov/2);
 }
 
 // RobotBody
-Robot::Robot(QGraphicsScene& scene, QPointF pos, float theta, QPointF irOffset, float h, float fov):
+Robot::Robot(QGraphicsScene& scene, QPointF pos, float theta):
     pos(pos),
-    theta(theta),
-    irOffset(irOffset),
-    h(h),
-    fov(fov),
-    cr(coneRadius(h,fov))
+    theta(theta)
 {
     vel_l = vel_r = 0.;
 
-    body = new RobotItem(pos,QPointF(ROBOT_LENGTH,ROBOT_WIDTH),irOffset, theta, cr);
+    body = new RobotItem(pos,QPointF(ROBOT_LENGTH,ROBOT_WIDTH), 0.0);
     scene.addItem(body);
+
+
+    update();
 }
 
 Robot::~Robot(){
@@ -53,6 +49,7 @@ void Robot::move(float delta, float dtheta){
 }
 
 void Robot::update(){
+    // update position
     float w = (vel_r - vel_l) / WHEEL_DISTANCE;
     if(w != 0){
         float R = (vel_l + vel_r) / (2*w);
@@ -84,8 +81,23 @@ void Robot::update(){
         pos += vel_l * QPointF(cos(theta), -sin(theta)) * DT;
     }
 
+    std::cout << pos << std::endl;
 
     body->setPos(pos, theta);
+    body->update();
+
+    QPointF nx = QPointF(cos(theta), -sin(theta)); // normal components in local coordinates
+    QPointF ny = QPointF(-sin(theta), cos(theta));
+
+    ir[FRONT].src = pos + ROBOT_LENGTH/2 * nx;
+    ir[FRONT].dst = ir[FRONT].src + IR_RANGE * nx;
+
+    ir[LEFT].src = pos - ROBOT_WIDTH/2 * ny;
+    ir[LEFT].dst = ir[LEFT].src - IR_RANGE * ny;
+
+    ir[RIGHT].src = pos + ROBOT_WIDTH/2 * ny;
+    ir[RIGHT].dst = ir[RIGHT].src + IR_RANGE * ny;
+
 }
 void Robot::setVelocityL(float v){
     vel_l = v;
@@ -100,51 +112,31 @@ void Robot::setVelocity(float l, float r){
     setVelocityR(r);
 }
 
-void Robot::setIRHeight(float h){
-    this->h = h;
-    this->cr = coneRadius(h,fov);
-    body->setCR(this->cr);
-}
-
-void Robot::sense(QImage& image){
-
-    float l_1 = irOffset.x();
-    float l_2 = irOffset.y();
-
-    QPointF ir_root = pos + QPointF(l_1 * cos(theta), -l_1 * sin(theta));
-    QPointF ir_l = ir_root - QPointF(l_2 * sin(theta), l_2 * cos(theta));
-    QPointF ir_r = ir_root + QPointF(l_2 * sin(theta), l_2 * cos(theta));
-
-    float cR = coneRadius(h,fov);
-    int i_cR = round(cR);
-
-    int n = 0;
-    float sum_l=0;
-    float sum_r = 0;
-
-    for(int offsetX = -i_cR; offsetX <= i_cR; ++offsetX){
-        for(int offsetY = -i_cR; offsetY <= i_cR; ++offsetY){
-            if((offsetX * offsetX + offsetY * offsetY) < (cR * cR)){
-                QPointF offset(offsetX, offsetY);
-
-                QRgb col_l = image.pixel((ir_l + offset).toPoint());
-                QRgb col_r = image.pixel((ir_r + offset).toPoint());
-
-                sum_l += qGray(col_l) / 255.0;
-                sum_r += qGray(col_r) / 255.0;
-                ++n;
+std::vector<float> Robot::sense(const Wall& wall){
+    int n = wall.poly.size();
 
 
+    QPointF res;
+    std::vector<float> val{IR_RANGE, IR_RANGE, IR_RANGE};
+
+    for(int i=0; i < 3; ++i){
+        for(int j=0; j < n; ++j){
+
+            // wall segment
+            QPointF s_0 = wall.poly[j];
+            QPointF s_1 = wall.poly[(j+1) % n]; // cyclic
+
+            if (intersect(ir[i].src, ir[i].dst, s_0, s_1, res)){
+                val[i] = min(val[i], norm(res - ir[i].src));
+                // TODO : account for multiple-segment scenarios
             }
+
         }
     }
 
-    // set ir values
+    body->setSensors(val[FRONT], val[LEFT], val[RIGHT]);
 
-    if(n){
-        ir_val_l = sum_l / n;
-        ir_val_r = sum_r / n;
-    }
+    return val;
 }
 
 void Robot::setVisible(bool visible){
