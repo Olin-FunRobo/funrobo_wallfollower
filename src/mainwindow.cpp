@@ -78,6 +78,7 @@ void MainWindow::right_ctrl(const std_msgs::Float32ConstPtr &msg){
 
 }
 void MainWindow::resetRobot(){
+    resetPower();
     robot.reset(QPointF(PXL_DIMS/2,PXL_DIMS/2),0);
 }
 
@@ -85,6 +86,12 @@ void MainWindow::resetPower(){
     ui->l_pow_slider->setValue(0);
     ui->r_pow_slider->setValue(0);
     robot.setVelocity(0,0);
+}
+
+void MainWindow::resetRoute(){
+    int n = ui->n_routes_spin->value();
+    wall.reset(n);
+    resetRobot();
 }
 
 void MainWindow::setSimAccel(double accel){

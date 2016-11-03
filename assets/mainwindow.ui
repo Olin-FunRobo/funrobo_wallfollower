@@ -352,6 +352,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>resetRouteBtn</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>resetRoute()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>642</x>
+     <y>110</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>761</x>
+     <y>104</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>setLeftPower(int)</slot>
@@ -361,5 +377,6 @@
   <slot>setAuto(bool)</slot>
   <slot>setSimAccel(double)</slot>
   <slot>resetRobot()</slot>
+  <slot>resetRoute()</slot>
  </slots>
 </ui>

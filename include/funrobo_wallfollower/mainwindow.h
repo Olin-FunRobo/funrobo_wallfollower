@@ -46,8 +46,10 @@ public:
 
 public slots:
     void resetRobot();
-    void setSimAccel(double accel);
     void resetPower();
+    void resetRoute();
+    void setSimAccel(double accel);
+
 
 private:
     Ui::MainWindow *ui;
