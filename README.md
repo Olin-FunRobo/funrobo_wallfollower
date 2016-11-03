@@ -16,12 +16,6 @@ If you have any problems, or discover a strange bug, feel free to contact me.
 
 Your task description is as follows:
 
-input : [sensor_msgs/Range] d_front, d_left, d_right
-		or [std_msgs/Float32] d_front_val, d_left_val, d_right_val
-
-output : [std_msgs/Twist] cmd_vel
-		or [std_msgs/Float32] w_left, w_right
-
 ### System Description
 
 #### Inputs
@@ -33,7 +27,7 @@ output : [std_msgs/Twist] cmd_vel
 #### Outputs
 
 - [std_msgs/Float32] vel_l : velocity of the left motor
-- [std_msgs/Flaot32] vel_r : velocity of the right motor
+- [std_msgs/Float32] vel_r : velocity of the right motor
 
 #### Learning Objectives :
 
@@ -42,11 +36,14 @@ output : [std_msgs/Twist] cmd_vel
 - Experience with Software-In-The-Loop Testing Control Code
 - Proficiency with C++ and ROS
 
+Let's get it started!
+
 ### Setup
 
 ```bash
 sudo apt-get install qtbase5-dev
 ```
+
 
 ### Installing the simulator
 
